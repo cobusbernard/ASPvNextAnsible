@@ -1,0 +1,20 @@
+- hosts: localhost
+  sudo: yes
+
+  tasks:
+    - name: add mono repository key
+      apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+
+    - name: add mono repository
+      lineinfile:
+        dest: /etc/apt/sources.list.d/mono-xamarin.list
+        line: "deb http://download.mono-project.com/repo/debian wheezy main"
+        create: yes
+
+    - name: installing mono
+      apt:
+        name: mono-complete
+        update_cache: yes
+        state: present

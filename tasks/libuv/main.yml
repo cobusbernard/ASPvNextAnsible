@@ -1,0 +1,26 @@
+- hosts: localhost
+  sudo: yes
+
+  tasks:
+    - name: install build dependencies
+      apt: name="{{ item }}" update_cache=yes state=present
+      with_items:
+        - automake
+        - autoconf
+        - build-essential
+        - libtool
+
+    - name: get libuv
+      get_url:
+        url: "http://libuv.org/dist/v1.0.0/libuv-v1.0.0.tar.gz"
+        dest: "/tmp/libuv.tar.gz"
+        mode: 0644
+
+    - shell: "tar xvf /tmp/libuv.tar.gz"
+    - shell: "rm /tmp/libuv.tar.gz"
+    - shell: "cd /tmp/libuv-v1.0.0 & sh ./autogen.sh"
+    - shell: "cd /tmp/libuv-v1.0.0 & ./configure"
+    - shell: "cd /tmp/libuv-v1.0.0 & make && make install"
+    - shell: "cd .."
+    - shell: "rm -rf libuv-v1.0.0"
+    - shell: "ldconfig"
